@@ -264,13 +264,70 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+// Theme Toggle Functionality
+const themeToggle = document.querySelector('.theme-toggle');
+const root = document.documentElement;
+
+// Check for saved theme preference
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+
+// Update theme icon based on current theme
+function updateThemeIcon() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+}
+
+// Toggle theme
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon();
+    
+    // Add transition class to body
+    document.body.classList.add('transition');
+    
+    // Remove transition class after animation
+    setTimeout(() => {
+        document.body.classList.remove('transition');
+    }, 1000);
+}
+
+// Add click event to theme toggle
+themeToggle.addEventListener('click', toggleTheme);
+
+// Add transition styles
+const style = document.createElement('style');
+style.textContent = `
+    body.transition * {
+        transition: background-color 1s ease, color 1s ease, border-color 1s ease;
+    }
+    
+    .theme-toggle {
+        display: block;
+    }
+`;
+document.head.appendChild(style);
+
+// Update theme icon on page load
+updateThemeIcon();
+
 // Navbar background change on scroll
 window.addEventListener('scroll', () => {
     const navbar = document.querySelector('.navbar');
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    
     if (window.scrollY > 50) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+        navbar.style.background = isDark 
+            ? 'rgba(18, 18, 18, 0.95)'
+            : 'rgba(255, 255, 255, 0.95)';
     } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+        navbar.style.background = isDark 
+            ? 'rgba(18, 18, 18, 0.95)'
+            : 'rgba(255, 255, 255, 0.95)';
     }
 });
 
